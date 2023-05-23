@@ -49,16 +49,18 @@ class Tree:
             node.n_node_samples = n_node_samples
             node.weighted_n_node_samples = weighted_n_node_samples
             
-            if is_left:
-                self.nodes[parent].left_child = node_id
-            else:
-                self.nodes[parent].left_right = node_id
-                
             # if the parent node is in a defined tree
             if parent != tree_undefined:
-                self.nodes[parent].left_child = node_id
-            else:
-                self.nodes[parent].right_child = node_id
+                if is_left:
+                    self.nodes[parent].left_child = node_id
+                else:
+                    self.nodes[parent].left_right = node_id
+                    
+            if is_leaf:
+                node.left_child = tree_leaf
+                node.right_child = tree_leaf
+                node.feature = tree_undefined
+                node.threshold = tree_undefined
         
         
 class TreeBuilder:
