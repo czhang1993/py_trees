@@ -26,6 +26,25 @@ class Tree:
         self.value = value
         self.value_stride = value_stride
         
+        def add_node(self, parent, is_left, is_leaf, feature, threshold, impurity,  n_node_samples, weighted_n_node_samples, missing_go_to_left):
+            # calculate the new node ID
+            node_id = self.node_count
+            
+            # check whether adding this node would exceed the specified tree capacity
+            if node_id >= self.capacity:
+                return 0
+            
+            # specify this node and its attributes
+            node = self.nodes[node_id]
+            node.impurity = impurity
+            node.n_node_samples = n_node_samples
+            node.weighted_n_node_samples = weighted_n_node_samples
+            
+            if is_left = True:
+                self.nodes[parent].left_child = node_id
+            else:
+                self.nodes[parent].left_right = node_id
+        
         
 class TreeBuilder:
     __init__(self, tree, x, y, sample_weight=None, feature_has_missing=None):
