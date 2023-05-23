@@ -68,7 +68,14 @@ class Tree:
             node.feature = feature
             node.threshold = threshold
             node.missing_go_to_left = missing_go_to_left
-
+            
+    def apply(self, x):
+        # find the terminal region (= leaf node) for each sample in x.
+        if issparse(x):
+            return self._apply_sparse_csr(x)
+        else:
+            return self._apply_dense(x)
+            
     def predict(self, x):
         out = self.get_value_ndarray()
         out = out.take(
@@ -79,13 +86,6 @@ class Tree:
         if self.n_outputs == 1:
             out = out.reshape(x.shape[0], self.max_n_classes)
         return out
-
-    def apply(self, x):
-        # find the terminal region (= leaf node) for each sample in x.
-        if issparse(x):
-            return self._apply_sparse_csr(x)
-        else:
-            return self._apply_dense(x)
         
         
 class TreeBuilder:
