@@ -20,7 +20,7 @@ class Node:
         
         
 class Tree:
-    __init__(self, n_features, n_classes, n_outputs, max_n_classes, max_depth, node_count, capacity, nodes, value, value_stride):
+    def __init__(self, n_features, n_classes, n_outputs, max_n_classes, max_depth, node_count, capacity, nodes, value, value_stride):
         # input and output layout
         self.n_features = n_features
         self.n_classes = n_classes
@@ -35,57 +35,57 @@ class Tree:
         self.value = value
         self.value_stride = value_stride
         
-        def add_node(self, parent, is_left, is_leaf, feature, threshold, impurity,  n_node_samples, weighted_n_node_samples, missing_go_to_left):
-            # calculate the new node ID
-            node_id = self.node_count
-            
-            # check whether adding this node would exceed the specified tree capacity
-            if node_id >= self.capacity:
-                return 0
-            
-            # specify this node and its attributes
-            node = self.nodes[node_id]
-            node.impurity = impurity
-            node.n_node_samples = n_node_samples
-            node.weighted_n_node_samples = weighted_n_node_samples
-            
-            # if its node's parent node has been defined
-            if parent != tree_undefined:
-                if is_left:
-                    self.nodes[parent].left_child = node_id
-                else:
-                    self.nodes[parent].left_right = node_id
-                    
-            # if this node is a leaf
-            if is_leaf:
-                node.left_child = tree_leaf
-                node.right_child = tree_leaf
-                node.feature = tree_undefined
-                node.threshold = tree_undefined
-                
+    def add_node(self, parent, is_left, is_leaf, feature, threshold, impurity,  n_node_samples, weighted_n_node_samples, missing_go_to_left):
+        # calculate the new node ID
+        node_id = self.node_count
+
+        # check whether adding this node would exceed the specified tree capacity
+        if node_id >= self.capacity:
+            return 0
+
+        # specify this node and its attributes
+        node = self.nodes[node_id]
+        node.impurity = impurity
+        node.n_node_samples = n_node_samples
+        node.weighted_n_node_samples = weighted_n_node_samples
+
+        # if its node's parent node has been defined
+        if parent != tree_undefined:
+            if is_left:
+                self.nodes[parent].left_child = node_id
             else:
-                # the left child and the right child will be set later
-                node.feature = feature
-                node.threshold = threshold
-                node.missing_go_to_left = missing_go_to_left
-                
-        def predict(self, x):
-            out = self.get_value_ndarray()
-            out = out.take(
-                self.apply(x),
-                axis=0,
-                mode='clip'
-            )
-            if self.n_outputs == 1:
-                out = out.reshape(x.shape[0], self.max_n_classes)
-            return out
-        
-        def apply(self, x):
-            # find the terminal region (= leaf node) for each sample in x.
-            if issparse(x):
-                return self._apply_sparse_csr(x)
-            else:
-                return self._apply_dense(x)
+                self.nodes[parent].left_right = node_id
+
+        # if this node is a leaf
+        if is_leaf:
+            node.left_child = tree_leaf
+            node.right_child = tree_leaf
+            node.feature = tree_undefined
+            node.threshold = tree_undefined
+
+        else:
+            # the left child and the right child will be set later
+            node.feature = feature
+            node.threshold = threshold
+            node.missing_go_to_left = missing_go_to_left
+
+    def predict(self, x):
+        out = self.get_value_ndarray()
+        out = out.take(
+            self.apply(x),
+            axis=0,
+            mode='clip'
+        )
+        if self.n_outputs == 1:
+            out = out.reshape(x.shape[0], self.max_n_classes)
+        return out
+
+    def apply(self, x):
+        # find the terminal region (= leaf node) for each sample in x.
+        if issparse(x):
+            return self._apply_sparse_csr(x)
+        else:
+            return self._apply_dense(x)
         
         
 class TreeBuilder:
