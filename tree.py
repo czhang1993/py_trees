@@ -74,7 +74,6 @@ class Tree:
 
         # extract input
         n_samples = x.shape[0]
-        cdef DTYPE_t X_i_node_feature
 
         # initialize output
         out = np.zeros(n_samples)
