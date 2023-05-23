@@ -49,18 +49,36 @@ class Tree:
             node.n_node_samples = n_node_samples
             node.weighted_n_node_samples = weighted_n_node_samples
             
-            # if the parent node is in a defined tree
+            # if its node's parent node has been defined
             if parent != tree_undefined:
                 if is_left:
                     self.nodes[parent].left_child = node_id
                 else:
                     self.nodes[parent].left_right = node_id
                     
+            # if this node is a leaf
             if is_leaf:
                 node.left_child = tree_leaf
                 node.right_child = tree_leaf
                 node.feature = tree_undefined
                 node.threshold = tree_undefined
+                
+            else:
+                # the left child and the right child will be set later
+                node.feature = feature
+                node.threshold = threshold
+                node.missing_go_to_left = missing_go_to_left
+                
+            def predict(self, x):
+                out = self.get_value_ndarray().take(
+                    self.apply(x),
+                    axis=0,
+                    mode='clip'
+                )
+                
+                if self.n_outputs == 1:
+                    out = out.reshape(x.shape[0], self.max_n_classes)
+                return out
         
         
 class TreeBuilder:
