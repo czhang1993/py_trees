@@ -79,7 +79,7 @@ class Tree:
         out = np.zeros(n_samples)
 
         # initialize auxiliary data-structure
-        node = NULL
+        node = None
         i = 0
 
         for i in range(n_samples):
@@ -90,14 +90,15 @@ class Tree:
                 # ... and node.right_child != tree_leaf:
                 if isnan(x_i_node_feature):
                     if node.missing_go_to_left:
-                        node = &self.nodes[node.left_child]
+                        node = self.nodes[node.left_child]
                     else:
-                        node = &self.nodes[node.right_child]
+                        node = self.nodes[node.right_child]
                 elif x_i_node_feature <= node.threshold:
-                    node = &self.nodes[node.left_child]
+                    node = self.nodes[node.left_child]
                 else:
-                    node = &self.nodes[node.right_child]
-            out[i] = (node - self.nodes)  # node offset
+                    node = self.nodes[node.right_child]
+            # node offset
+            out[i] = (node - self.nodes)
         return np.asarray(out)
             
     def predict(self, x):
