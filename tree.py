@@ -8,7 +8,7 @@ tree_undefined = -2
 
 
 class Node:
-    __init__(self, left_child, right_child, feature, threshold, impurity, n_node_samples=None, weighted_n_node_samples=None, missing_go_to_left=None):
+    def __init__(self, left_child, right_child, feature, threshold, impurity, n_node_samples=None, weighted_n_node_samples=None, missing_go_to_left=None):
         self.left_child = left_child
         self.right_child = right_child
         self.feature = feature
