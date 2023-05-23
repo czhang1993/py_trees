@@ -1,3 +1,12 @@
+is_first = 1
+is_not_first = 0
+is_left = 1
+is_not_left = 0
+
+tree_leaf = -1
+tree_undefined = -2
+
+
 class Node:
     __init__(self, left_child, right_child, feature, threshold, impurity, n_node_samples=None, weighted_n_node_samples=None, missing_go_to_left=None):
         self.left_child = left_child
@@ -40,10 +49,16 @@ class Tree:
             node.n_node_samples = n_node_samples
             node.weighted_n_node_samples = weighted_n_node_samples
             
-            if is_left = True:
+            if is_left:
                 self.nodes[parent].left_child = node_id
             else:
                 self.nodes[parent].left_right = node_id
+                
+            # if the parent node is in a defined tree
+            if parent != tree_undefined:
+                self.nodes[parent].left_child = node_id
+            else:
+                self.nodes[parent].right_child = node_id
         
         
 class TreeBuilder:
