@@ -93,8 +93,10 @@ class Tree:
                 x_i_node_feature = x[i, node.feature]
                 # if x_i's node feature <= the node's threshold
                 if x_i_node_feature <= node.threshold:
+                    # define the node as the node's left child
                     node = self.nodes[node.left_child]
                 else:
+                    # define the node as the node's right child
                     node = self.nodes[node.right_child]
             # node offset
             out[i] = (node - self.nodes)
