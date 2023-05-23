@@ -70,11 +70,36 @@ class Tree:
             node.missing_go_to_left = missing_go_to_left
             
     def apply(self, x):
-        # find the terminal region (= leaf node) for each sample in x.
-        if issparse(x):
-            return self._apply_sparse_csr(x)
-        else:
-            return self._apply_dense(x)
+        # finds the terminal region (= leaf node) for each sample in x
+
+        # extract input
+        n_samples = x.shape[0]
+        cdef DTYPE_t X_i_node_feature
+
+        # initialize output
+        out = np.zeros(n_samples)
+
+        # initialize auxiliary data-structure
+        node = NULL
+        i = 0
+
+        for i in range(n_samples):
+            node = self.nodes
+            # while node not a leaf
+            while node.left_child != tree_leaf:
+                x_i_node_feature = x[i, node.feature]
+                # ... and node.right_child != tree_leaf:
+                if isnan(x_i_node_feature):
+                    if node.missing_go_to_left:
+                        node = &self.nodes[node.left_child]
+                    else:
+                        node = &self.nodes[node.right_child]
+                elif x_i_node_feature <= node.threshold:
+                    node = &self.nodes[node.left_child]
+                else:
+                    node = &self.nodes[node.right_child]
+            out[i] = (node - self.nodes)  # node offset
+        return np.asarray(out)
             
     def predict(self, x):
         out = self.get_value_ndarray()
