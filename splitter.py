@@ -140,7 +140,7 @@ class Splitter:
         # n_total_constants = n_known_constants + n_found_constants
         n_total_constants = n_known_constants
 
-        init_split(best_split, end)
+        # init_split(best_split, end)
 
         partitioner.init_node_split(start, end)
 
