@@ -49,6 +49,25 @@ class Splitter:
         if feature_has_missing is not None:
             self.criterion.init_sum_missing()
         return 0
+    
+    
+    def node_split(self, impurity, split, n_constant_features):
+        """Find the best split on node samples[start:end].
+
+        This is a placeholder method. The majority of computation will be done
+        here.
+
+        It should return -1 upon errors.
+        """
+        pass
+
+    def node_value(self, dest):
+        """Copy the value of node samples[start:end] into dest."""
+        self.criterion.node_value(dest)
+
+    def node_impurity(self):
+        """Return the impurity of the current node."""
+        return self.criterion.node_impurity()
         
         
         
