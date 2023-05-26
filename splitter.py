@@ -74,12 +74,9 @@ class Splitter:
 
         Parameters
         ----------
-        start : SIZE_t
-            The index of the first sample to consider
-        end : SIZE_t
-            The index of the last sample to consider
-        weighted_n_node_samples : ndarray, dtype=double pointer
-            The total weight of those samples
+        start : The index of the first sample to consider
+        end : The index of the last sample to consider
+        weighted_n_node_samples : ndarray, The total weight of those samples
         """
 
         self.start = start
@@ -106,12 +103,8 @@ class Splitter:
         # Find the best split
         start = self.start
         end = self.end
-        end_non_missing
-        n_missing = 0
-        has_missing = 0
         n_searches
         n_left, n_right
-        missing_go_to_left
 
         samples = self.samples
         features = self.features
@@ -172,7 +165,8 @@ class Splitter:
 
             # Draw a feature at random
             f_j = rand_int(n_drawn_constants, f_i - n_found_constants,
-                           random_state)
+                           # random_state
+                          )
 
             if f_j < n_known_constants:
                 # f_j in the interval [n_drawn_constants, n_known_constants[
@@ -186,8 +180,6 @@ class Splitter:
             # f_j in the interval [n_total_constants, f_i[
             current_split.feature = features[f_j]
             partitioner.sort_samples_and_feature_values(current_split.feature)
-            n_missing = partitioner.n_missing
-            end_non_missing = end - n_missing
 
             if (
                 # All values for this feature are missing, or
@@ -265,12 +257,6 @@ class Splitter:
                             current_split.threshold == -infinity
                         ):
                             current_split.threshold = feature_values[p_prev]
-
-                        current_split.n_missing = n_missing
-                        if n_missing == 0:
-                            current_split.missing_go_to_left = n_left > n_right
-                        else:
-                            current_split.missing_go_to_left = missing_go_to_left
 
                         # copy
                         best_split = current_split
