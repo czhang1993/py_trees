@@ -3,6 +3,15 @@ import numpy as np
 infinity = np.inf
 
 
+def init_split(self, start_pos):
+    self.impurity_left = infinity
+    self.impurity_right = infinity
+    self.pos = start_pos
+    self.feature = 0
+    self.threshold = 0.
+    self.improvement = -infinity
+
+
 class Splitter:
     def __init__(self, criterion, max_features, min_samples_leaf, min_weight_leaf, 
                  # random_state
@@ -57,14 +66,6 @@ class Splitter:
         self.y = y
 
         self.sample_weight = sample_weight
-
-    def init_split(self, start_pos):
-        self.impurity_left = infinity
-        self.impurity_right = infinity
-        self.pos = start_pos
-        self.feature = 0
-        self.threshold = 0.
-        self.improvement = -infinity
         
     def node_value(self, dest):
         """Copy the value of node samples[start:end] into dest."""
