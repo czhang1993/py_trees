@@ -65,7 +65,38 @@ class Splitter:
     def node_impurity(self):
         """Return the impurity of the current node."""
         return self.criterion.node_impurity()
-        
+    
+    def node_reset(self, start, end, weighted_n_node_samples):
+        """Reset splitter on node samples[start:end].
+
+        Returns -1 in case of failure to allocate memory (and raise MemoryError)
+        or 0 otherwise.
+
+        Parameters
+        ----------
+        start : SIZE_t
+            The index of the first sample to consider
+        end : SIZE_t
+            The index of the last sample to consider
+        weighted_n_node_samples : ndarray, dtype=double pointer
+            The total weight of those samples
+        """
+
+        self.start = start
+        self.end = end
+
+        self.criterion.init(
+            self.y,
+            self.sample_weight,
+            self.weighted_n_samples,
+            self.samples,
+            start,
+            end
+        )
+
+        weighted_n_node_samples[0] = self.criterion.weighted_n_node_samples
+        return 0
+    
     def node_split_best(self, partitioner, criterion, impurity, split, n_constant_features):
         """Find the best split on node samples[start:end]
 
