@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Splitter:
     def __init__(self, criterion, max_features, min_samples_leaf, min_weight_leaf, 
                  # random_state
@@ -10,7 +13,7 @@ class Splitter:
         self.max_features = max_features
         self.min_samples_leaf = min_samples_leaf
         self.min_weight_leaf = min_weight_leaf
-        self.random_state = random_state
+        # self.random_state = random_state
         
     def init(self, x, y, sample_weight):
         # self.rand_r_state = self.random_state.randint(0, RAND_R_MAX)
@@ -70,6 +73,4 @@ class Splitter:
     def node_impurity(self):
         """Return the impurity of the current node."""
         return self.criterion.node_impurity()
-        
-        
         
