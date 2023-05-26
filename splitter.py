@@ -57,9 +57,6 @@ class Splitter:
         self.y = y
 
         self.sample_weight = sample_weight
-        if feature_has_missing is not None:
-            self.criterion.init_sum_missing()
-        return 0
 
     def node_value(self, dest):
         """Copy the value of node samples[start:end] into dest."""
