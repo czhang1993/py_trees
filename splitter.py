@@ -1,5 +1,7 @@
 class Splitter:
-    def __init__(self, criterion, max_features, min_samples_leaf, min_weight_leaf, random_state):
+    def __init__(self, criterion, max_features, min_samples_leaf, min_weight_leaf, 
+                 # random_state
+                ):
         self.criterion = criterion
         
         self.n_samples = 0
@@ -11,7 +13,7 @@ class Splitter:
         self.random_state = random_state
         
     def init(self, x, y, sample_weight):
-        self.rand_r_state = self.random_state.randint(0, RAND_R_MAX)
+        # self.rand_r_state = self.random_state.randint(0, RAND_R_MAX)
         
         n_samples = x.shape[0]
         
