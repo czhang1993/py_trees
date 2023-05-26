@@ -41,11 +41,15 @@ class Splitter:
         self.n_samples = j
         self.weighted_n_samples = weighted_n_samples
 
+        # calculate the total of dimensions of the features
         n_features = x.shape[1]
+        # define the indices of the features
         self.features = np.arange(n_features)
         self.n_features = n_features
-
+        
+        # initialise a feature's values as an array of zeros
         self.feature_values = np.empty(n_samples)
+        # initialise a constant feature's values as an array of zeros
         self.constant_features = np.empty(n_features)
 
         self.y = y
