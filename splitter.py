@@ -1,5 +1,7 @@
 import numpy as np
 
+infinity = np.inf
+
 
 class Splitter:
     def __init__(self, criterion, max_features, min_samples_leaf, min_weight_leaf, 
@@ -94,8 +96,8 @@ class Splitter:
         min_weight_leaf = splitter.min_weight_leaf
         random_state = &splitter.rand_r_state
 
-        current_proxy_improvement = -INFINITY
-        best_proxy_improvement = -INFINITY
+        current_proxy_improvement = -infinity
+        best_proxy_improvement = -infinity
 
         f_i = n_features
         
@@ -231,8 +233,8 @@ class Splitter:
 
                         if (
                             current_split.threshold == feature_values[p] or
-                            current_split.threshold == INFINITY or
-                            current_split.threshold == -INFINITY
+                            current_split.threshold == infinity or
+                            current_split.threshold == -infinity
                         ):
                             current_split.threshold = feature_values[p_prev]
 
@@ -242,30 +244,8 @@ class Splitter:
                         else:
                             current_split.missing_go_to_left = missing_go_to_left
 
-                        best_split = current_split  # copy
-
-            # Evaluate when there are missing values and all missing values goes
-            # to the right node and non-missing values goes to the left node.
-            if has_missing:
-                n_left, n_right = end - start - n_missing, n_missing
-                p = end - n_missing
-                missing_go_to_left = 0
-
-                if not (n_left < min_samples_leaf or n_right < min_samples_leaf):
-                    criterion.missing_go_to_left = missing_go_to_left
-                    criterion.update(p)
-
-                    if not ((criterion.weighted_n_left < min_weight_leaf) or
-                            (criterion.weighted_n_right < min_weight_leaf)):
-                        current_proxy_improvement = criterion.proxy_impurity_improvement()
-
-                        if current_proxy_improvement > best_proxy_improvement:
-                            best_proxy_improvement = current_proxy_improvement
-                            current_split.threshold = INFINITY
-                            current_split.missing_go_to_left = missing_go_to_left
-                            current_split.n_missing = n_missing
-                            current_split.pos = p
-                            best_split = current_split
+                        # copy
+                        best_split = current_split
 
         # Reorganize into samples[start:best_split.pos] + samples[best_split.pos:end]
         if best_split.pos < end:
@@ -295,11 +275,11 @@ class Splitter:
         # Respect invariant for constant features: the original order of
         # element in features[:n_known_constants] must be preserved for sibling
         # and child nodes
-        memcpy(&features[0], &constant_features[0], sizeof(SIZE_t) * n_known_constants)
+        memcpy(features[0], constant_features[0], sizeof(SIZE_t) * n_known_constants)
 
         # Copy newly found constant features
-        memcpy(&constant_features[n_known_constants],
-               &features[n_known_constants],
+        memcpy(constant_features[n_known_constants],
+               features[n_known_constants],
                sizeof(SIZE_t) * n_found_constants)
 
         # Return values
