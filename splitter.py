@@ -22,7 +22,7 @@ class Splitter:
         
         n_samples = x.shape[0]
         
-        self.samples = np.empty(n_samples)
+        self.samples = np.zeros(n_samples)
         
         samples = self.samples
         weighted_n_samples = 0.0
@@ -50,9 +50,9 @@ class Splitter:
         self.n_features = n_features
         
         # initialise a feature's values as an array of zeros
-        self.feature_values = np.empty(n_samples)
+        self.feature_values = np.zeros(n_samples)
         # initialise a constant feature's values as an array of zeros
-        self.constant_features = np.empty(n_features)
+        self.constant_features = np.zeros(n_features)
 
         self.y = y
 
@@ -66,15 +66,15 @@ class Splitter:
         """Return the impurity of the current node."""
         return self.criterion.node_impurity()
         
-    def node_split_best(splitter, partitioner, criterion, impurity, split, n_constant_features):
+    def node_split_best(self, partitioner, criterion, impurity, split, n_constant_features):
         """Find the best split on node samples[start:end]
 
         Returns -1 in case of failure to allocate memory (and raise MemoryError)
         or 0 otherwise.
         """
         # Find the best split
-        start = splitter.start
-        end = splitter.end
+        start = self.start
+        end = self.end
         end_non_missing
         n_missing = 0
         has_missing = 0
@@ -82,16 +82,16 @@ class Splitter:
         n_left, n_right
         missing_go_to_left
 
-        samples = splitter.samples
-        features = splitter.features
-        constant_features = splitter.constant_features
-        n_features = splitter.n_features
+        samples = self.samples
+        features = self.features
+        constant_features = self.constant_features
+        n_features = self.n_features
 
-        feature_values = splitter.feature_values
-        max_features = splitter.max_features
-        min_samples_leaf = splitter.min_samples_leaf
-        min_weight_leaf = splitter.min_weight_leaf
-        random_state = &splitter.rand_r_state
+        feature_values = self.feature_values
+        max_features = self.max_features
+        min_samples_leaf = self.min_samples_leaf
+        min_weight_leaf = self.min_weight_leaf
+        # random_state = splitter.rand_r_state
 
         current_proxy_improvement = -infinity
         best_proxy_improvement = -infinity
@@ -107,7 +107,7 @@ class Splitter:
         # n_total_constants = n_known_constants + n_found_constants
         n_total_constants = n_known_constants
 
-        _init_split(best_split, end)
+        init_split(best_split, end)
 
         partitioner.init_node_split(start, end)
 
@@ -195,7 +195,7 @@ class Splitter:
                 p = start
 
                 while p < end_non_missing:
-                    partitioner.next_p(&p_prev, &p)
+                    partitioner.next_p(p_prev, p)
 
                     if p >= end_non_missing:
                         continue
@@ -259,7 +259,7 @@ class Splitter:
             criterion.reset()
             criterion.update(best_split.pos)
             criterion.children_impurity(
-                &best_split.impurity_left, &best_split.impurity_right
+                best_split.impurity_left, best_split.impurity_right
             )
             best_split.improvement = criterion.impurity_improvement(
                 impurity,
@@ -267,7 +267,7 @@ class Splitter:
                 best_split.impurity_right
             )
 
-            shift_missing_values_to_left_if_required(&best_split, samples, end)
+            shift_missing_values_to_left_if_required(best_split, samples, end)
 
         # Respect invariant for constant features: the original order of
         # element in features[:n_known_constants] must be preserved for sibling
